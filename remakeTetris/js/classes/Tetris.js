@@ -10,10 +10,9 @@ class Tetris {
 		this.controls = controls;
 		
 		this.pieces = [
-			new Piece(this.settings, 'rgba(255,0,0,0.7)', {x:1, y:15}, pieceTypes[0]),
-			new Piece(this.settings, 'rgba(255,0,0,0.7)', {x:2, y:0}, 's'),
-			new Piece(this.settings, 'rgba(255,0,0,0.7)', {x:1, y:5}, pieceTypes[2]),
-			new Piece(this.settings, 'rgba(255,0,0,0.7)', {x:1, y:9}, pieceTypes[4]),
+			new Piece(this.settings, 'rgba(255,0,0,0.7)', {x:2, y:0}, pieceTypes[0]),
+			new Piece(this.settings, 'rgba(255,0,0,0.7)', {x:1, y:10}, pieceTypes[4]),
+			new Piece(this.settings, 'rgba(255,0,0,0.7)', {x:2, y:15}, pieceTypes[5]),
 		];
 		this.matriz = [];
 		for (let y = 0; y < this.settings.heightTiles; y++) {
@@ -29,7 +28,7 @@ class Tetris {
 		for (let piece of this.pieces) {
 			for (let b of piece.blocks) {
 				if (piece.land) {
-					this.matriz[piece.position.y+b.y][piece.position.x+b.x] = '1';					
+					this.matriz[piece.position.y-b.y][piece.position.x+b.x] = '1';					
 				}
 			}
 		}

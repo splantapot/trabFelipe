@@ -14,20 +14,18 @@ const settings = {
 //create Piece's models
 const pieceTypes = ['o','s','z','j','l','i','t'];
 const pieceTable = {
-	o: [[0,0], [0,1], [1,0], [1,1], [1,1]],
-	s: [[0,0], [0,1], [1,1], [1,2], [1,1]],
-	z: [[1,0], [0,1], [1,1], [0,2], [1,1]],
-	j: [[1,0], [1,1], [1,2], [0,2], [1,2]],
-	l: [[1,0], [1,1], [1,2], [2,2], [1,2]],
-	i: [[0,0], [0,1], [0,2], [0,3], [1,2]],
-	t: [[1,0], [0,1], [1,1], [2,1], [1,1]]
+	o: [[-1,-1], [0,-1], [-1,0], [0,0]],
+	t: [[0,-1], [-1,0], [0,0], [0,1]],
+	z: [[-2,-1], [-1,-1], [-1,0], [0,0]],
+	s: [[0,-1], [1,-1], [-1,0], [0,0]],
+	l: [[-1,-2], [-1,-1], [-1,0], [0,0]],
+	j: [[0,-2], [0,-1], [-1,0], [0,0]],
+	i: [[-2,-1], [-1,-1], [0,-1], [1,-1]],
 }
 function buildPiece(type) {
 	const newPieceBlocks = []
-	pieceTable[type].forEach((coord, index) => {
-		if (index < 4) {
-			newPieceBlocks.push(new Block(coord[0], coord[1]));
-		}
+	pieceTable[type].forEach((coord) => {
+		newPieceBlocks.push(new Block(coord[0], coord[1]));
 	})
 	return newPieceBlocks;
 }

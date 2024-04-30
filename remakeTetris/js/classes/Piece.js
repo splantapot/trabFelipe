@@ -17,29 +17,21 @@ class Piece {
 	}
 	
 	isCollided(matriz) {
-		let maxX = 0;
-		let maxY = 0;
-		this.blocks.forEach((b) => {
-			if (maxX < b.x) {
-				maxX = b.x;
-			}
-			if (maxY < b.y) {
-				maxY = b.y;
-			}
-		});
-		maxX++;
-		maxY++;
-		if (this.position.y+maxY >= this.heightTiles){
+		/*
+		if (this.position.y+1 >= this.heightTiles){
 			this.land = true;
 		}
 		if (!this.land) {
 			for (let b of this.blocks) {
-				const v = matriz[this.position.y+b.y+1][this.position.x+b.x]
+				const updatePosY = matriz[this.position.y+b.y]? this.position.y+b.y : this.heightTiles-1;
+				const updatePosX = matriz[updatePosY][this.position.x+b.x]? this.position.x+b.x : this.widthTiles-1;
+				const v = matriz[updatePosY][updatePosX];
 				if (v == 1) {
 					this.land = true;
 				}
 			}	
 		}
+		*/
 	}
 	
 	update(x, y) {
@@ -49,7 +41,7 @@ class Piece {
 	draw() {
 		this.blocks.forEach((b) => {
 			this.ctx.fillStyle = this.color;
-			this.ctx.fillRect((this.position.x+b.x)*this.sizeTile, (this.position.y+b.y)*this.sizeTile, this.sizeTile, this.sizeTile);
+			this.ctx.fillRect((this.position.x+b.x)*this.sizeTile, (this.position.y-b.y)*this.sizeTile, this.sizeTile, this.sizeTile);
 		})
 	}
 }
