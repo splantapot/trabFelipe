@@ -1,5 +1,5 @@
 class Controller {
-    constructor(single = false, reference = window) {
+    constructor(reference = window) {
 		this.reference = reference
         this.inputs = [];
 	

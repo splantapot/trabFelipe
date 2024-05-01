@@ -1,4 +1,5 @@
 class Tetris {
+	//const tetris = new Tetris(settings, 5, 1, {left:'a', right:'d', down:'s'});
 	constructor(settings, initialSpeed, finalSpeed, controls) {
 		this.settings = settings;
 		
@@ -10,9 +11,9 @@ class Tetris {
 		this.controls = controls;
 		
 		this.pieces = [
-			new Piece(this.settings, 'rgba(255,0,0,0.7)', {x:2, y:0}, pieceTypes[0]),
-			new Piece(this.settings, 'rgba(255,0,0,0.7)', {x:1, y:10}, pieceTypes[4]),
-			new Piece(this.settings, 'rgba(255,0,0,0.7)', {x:2, y:15}, pieceTypes[5]),
+			new Piece(this.settings, 'rgba(255,0,0,0.7)', {x:1, y:3}, pieceTypes[0]),
+			//new Piece(this.settings, 'rgba(255,0,0,0.7)', {x:1, y:10}, pieceTypes[4]),
+			//new Piece(this.settings, 'rgba(255,0,0,0.7)', {x:2, y:15}, pieceTypes[5]),
 		];
 		this.matriz = [];
 		for (let y = 0; y < this.settings.heightTiles; y++) {
@@ -27,11 +28,15 @@ class Tetris {
 	updateMatriz() {
 		for (let piece of this.pieces) {
 			for (let b of piece.blocks) {
-				if (piece.land) {
-					this.matriz[piece.position.y-b.y][piece.position.x+b.x] = '1';					
+				if (piece.land && this.matriz[piece.position.y+b.y]) {
+					this.matriz[piece.position.y+b.y][piece.position.x+b.x] = '1';					
 				}
 			}
 		}
+	}
+	
+	control(inputs) {
+		
 	}
 	
 	update(time) {
@@ -65,5 +70,8 @@ class Tetris {
 				this.settings.ctx.fillRect(x*this.settings.sizeTile,y*this.settings.sizeTile,this.settings.sizeTile,this.settings.sizeTile)
 			}
 		}
+		
+		this.settings.ctx.fillStyle = 'cyan';
+		this.settings.ctx.fillRect(0, ((this.settings.heightTiles-1)*this.settings.sizeTile), this.settings.widthTiles*this.settings.sizeTile, 3);
 	}
 }

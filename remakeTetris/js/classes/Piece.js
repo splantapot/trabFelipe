@@ -17,21 +17,17 @@ class Piece {
 	}
 	
 	isCollided(matriz) {
-		/*
-		if (this.position.y+1 >= this.heightTiles){
-			this.land = true;
+		for (let b of this.blocks) {
+			const x = this.position.x+b.x;
+			const y = this.position.y+b.y;
+			
+			if ((y >= matriz.length-1) ||
+				(matriz[y] && (matriz[y+1][x]==undefined || matriz[y+1][x]==1))
+				
+				) {
+				this.land = true;
+			}
 		}
-		if (!this.land) {
-			for (let b of this.blocks) {
-				const updatePosY = matriz[this.position.y+b.y]? this.position.y+b.y : this.heightTiles-1;
-				const updatePosX = matriz[updatePosY][this.position.x+b.x]? this.position.x+b.x : this.widthTiles-1;
-				const v = matriz[updatePosY][updatePosX];
-				if (v == 1) {
-					this.land = true;
-				}
-			}	
-		}
-		*/
 	}
 	
 	update(x, y) {
@@ -39,9 +35,10 @@ class Piece {
 	}
 	
 	draw() {
-		this.blocks.forEach((b) => {
-			this.ctx.fillStyle = this.color;
-			this.ctx.fillRect((this.position.x+b.x)*this.sizeTile, (this.position.y-b.y)*this.sizeTile, this.sizeTile, this.sizeTile);
+		//const colors = ['red', 'blue', 'lime', 'gold']
+		this.blocks.forEach((b, ix) => {
+			this.ctx.fillStyle = this.color;//colors[ix]
+			this.ctx.fillRect((this.position.x+b.x)*this.sizeTile, (this.position.y+b.y)*this.sizeTile, this.sizeTile, this.sizeTile);
 		})
 	}
 }

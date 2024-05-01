@@ -1,7 +1,7 @@
 //Game --------------------
-const tetris = new Tetris(settings, 10, 1);
+const tetris = new Tetris(settings, 5, 1, {left:'a', right:'d', down:'s'});
 const fpsTimer = new Timer();
-const controller = new Controller({left:'a', right:'d', down:'s'});
+const controller = new Controller();
 
 function gameRun() {
 	requestAnimationFrame(gameRun);
@@ -10,6 +10,7 @@ function gameRun() {
 	if (fpsTimer.mainPoint > 1000/settings.fps) {
 		fpsTimer.reset();
 		
+		tetris.control(controller.inputs);
 		tetris.update(fpsTimer.dif);
 		tetris.drawGrid();
 		tetris.drawPieces();
@@ -31,7 +32,7 @@ function matrizRun() {
 	for (let y = 0; y < settings.heightTiles; y++) {
 		for (let x = 0; x < settings.widthTiles; x++) {
 			matrizCtx.fillStyle = settings.bgColors[(x+y)%2];
-			matrizCtx.fillRect(x*settings.sizeTile,y*settings.sizeTile,settings.sizeTile,settings.sizeTile)
+			matrizCtx.fillRect(x*settings.sizeTile,y*settings.sizeTile,settings.sizeTile,settings.sizeTile);
 			
 			const matrizValue =tetris.matriz[y][x];
 			matrizCtx.fillStyle = matrizValue==0? 'white' : 'red';
