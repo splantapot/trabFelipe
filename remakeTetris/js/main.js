@@ -7,10 +7,9 @@ function gameRun() {
 	requestAnimationFrame(gameRun);
 	fpsTimer.update();
 	
+	tetris.control(controller.inputs, fpsTimer.dif);
 	if (fpsTimer.mainPoint > 1000/settings.fps) {
 		fpsTimer.reset();
-		
-		tetris.control(controller.inputs);
 		tetris.update(fpsTimer.dif);
 		tetris.drawGrid();
 		tetris.drawPieces();

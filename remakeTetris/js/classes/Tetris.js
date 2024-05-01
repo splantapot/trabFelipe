@@ -8,10 +8,15 @@ class Tetris {
 		this.speedNow = initialSpeed;
 		this.timer = 0;
 		
+		this.horizontalCooldown = 100;
+		this.horizontalTime = 0;
+		
 		this.controls = controls;
+		this.gain = {x:0, y:0};
+		this.hasPiece = true;
 		
 		this.pieces = [
-			new Piece(this.settings, 'rgba(255,0,0,0.7)', {x:1, y:3}, pieceTypes[0]),
+			new Piece(this.settings, 'rgba(255,0,0,0.7)', {x:1, y:3}, pieceTypes[1]),
 			//new Piece(this.settings, 'rgba(255,0,0,0.7)', {x:1, y:10}, pieceTypes[4]),
 			//new Piece(this.settings, 'rgba(255,0,0,0.7)', {x:2, y:15}, pieceTypes[5]),
 		];
@@ -33,10 +38,32 @@ class Tetris {
 				}
 			}
 		}
+		
+		//this.hasPiece = true;
 	}
 	
-	control(inputs) {
+	control(inputs, time) {
+		this.horizontalTime += time;
 		
+		if (this.horizontalTime >= this.horizontalCooldown) {
+			this.horizontalTime = 0;
+			if (inputs.includes(this.controls.left)) {
+				this.gain.x = -1;
+			} else if (inputs.includes(this.controls.right)) {
+				this.gain.x = 1;
+			} else {
+				this.gain.x = 0;
+			}
+		} else {
+			this.gain.x = 0;
+		}
+		
+		this.pieces.forEach((piece) => {
+			piece.isSide(this.matriz) //collide with side
+			if (!piece.land) {
+				piece.update(this.gain.x,0);				
+			}
+		});
 	}
 	
 	update(time) {
@@ -46,8 +73,9 @@ class Tetris {
 			this.pieces.forEach((piece) => {
 				const initialLand = piece.land;
 				this.settings.ctx.fillStyle = piece.color;
-				piece.isCollided(this.matriz)
-				piece.update(0,1);
+				piece.isLand(this.matriz) //landed
+				
+				piece.update(this.gain.x,1);
 				if (initialLand != piece.land) {
 					this.updateMatriz();					
 				}
