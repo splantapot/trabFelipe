@@ -1,5 +1,5 @@
 //Game --------------------
-const tetris = new Tetris(settings, 5, 1, {left:'a', right:'d', down:'s'});
+const tetris = new Tetris(settings, 5, 1, {left:'a', right:'d', down:'s', rot:'x'});
 const fpsTimer = new Timer();
 const controller = new Controller();
 
@@ -14,10 +14,10 @@ function gameRun() {
 		tetris.drawGrid();
 		tetris.drawPieces();
 	}
-	//console.log(tetris.pieces[0].position.y)
 	
 	matrizRun();
 };
+tetris.generatePiece();
 requestAnimationFrame(gameRun);
 
 //Matriz Viewer
@@ -35,7 +35,7 @@ function matrizRun() {
 			
 			const matrizValue =tetris.matriz[y][x];
 			matrizCtx.fillStyle = matrizValue==0? 'white' : 'red';
-			matrizCtx.font = `${tetris.settings.sizeTile*0.7}px Arial`;
+			matrizCtx.font = `${tetris.settings.sizeTile*0.7}px Nunito`;
 			matrizCtx.fillText(tetris.matriz[y][x],(x*settings.sizeTile)+(settings.sizeTile/4),((y+1)*settings.sizeTile)-(settings.sizeTile/4));
 		}
 	}

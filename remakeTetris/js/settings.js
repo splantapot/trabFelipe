@@ -11,25 +11,6 @@ const settings = {
 	ctx: undefined,
 };
 
-//create Piece's models
-const pieceTypes = ['o','s','z','j','l','i','t'];
-const pieceTable = {
-	o: [[-1,-1], [0,-1], [-1,0], [0,0]],
-	t: [[0,-1], [-1,0], [0,0], [0,1]],
-	z: [[-2,-1], [-1,-1], [-1,0], [0,0]],
-	s: [[0,-1], [1,-1], [-1,0], [0,0]],
-	l: [[-1,-2], [-1,-1], [-1,0], [0,0]],
-	j: [[0,-2], [0,-1], [-1,0], [0,0]],
-	i: [[-2,-1], [-1,-1], [0,-1], [1,-1]],
-}
-function buildPiece(type) {
-	const newPieceBlocks = []
-	pieceTable[type].forEach((coord) => {
-		newPieceBlocks.push(new Block(coord[0], coord[1]));
-	})
-	return newPieceBlocks;
-}
-
 //Create canvas and context (to draw) + setting canvas
 const canvasBox = document.getElementById('canvasBox');
 const canvas = document.getElementById('tela');
@@ -40,3 +21,10 @@ settings.sizeTile = (canvasBox.clientHeight-canvasBox.clientHeight%settings.heig
 settings.sizeTile = (settings.sizeTile-settings.heightTiles)/settings.heightTiles;
 canvas.width = settings.widthTiles * settings.sizeTile;
 canvas.height = settings.heightTiles * settings.sizeTile;
+
+//Default functions
+function rng(interval) {
+	interval *= Math.random();
+	interval = Math.floor(interval);
+	return interval;
+}
