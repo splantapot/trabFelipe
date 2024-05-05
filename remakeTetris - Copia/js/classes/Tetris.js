@@ -2,14 +2,17 @@ class Tetris {
 	//const tetris = new Tetris(settings, 5, 1, {left:'a', right:'d', down:'s'});
 	constructor(settings, initialSpeed, finalSpeed, controls) {
 		this.settings = settings;
+		this.isPlaying = true;
 		
 		this.speedInitial = initialSpeed;
 		this.speedFinal = finalSpeed;
 		this.speedNow = initialSpeed;
 		this.timer = 0;
 		
-		this.horizontalCooldown = 110;
+		this.horizontalCooldown = 160;
 		this.horizontalTime = 0;
+		this.rotateCooldown = 200;
+		this.rotateTime = 0;
 		
 		this.controls = controls;
 		this.gain = {x:0, y:0};
@@ -34,18 +37,33 @@ class Tetris {
 	}
 	
 	generatePiece() {
-		const nPiece = new Piece(this.settings, pieceColors[rng(pieceColors.length)], {x:5, y:-2}, pieceTypes[rng(pieceTypes.length)]);
+		const nPiece = new Piece(this.settings, pieceColors[rng(pieceColors.length)], {x:5, y:-1}, pieceTypes[rng(pieceTypes.length)]);
 		if (rng(2)) {
-			nPiece.rotate(1, this.matriz);
-			if (rng(2)) {
-				nPiece.rotate(1, this.matriz);
-			}
+			nPiece.rotate(rng(3)-1, this.matriz);
+		}
+		nPiece.isCollided(this.matriz);
+		nPiece.update(0,0,true);
+		if (nPiece.land) {
+			this.isPlaying = false;
 		}
 		this.pieces.push(nPiece);
 	}
 	
-	destroy(lines){
-		console.log('fazer o destruir');
+	destroy(lines){		
+		console.log(`fazer o destrui na linha ${lines}`);
+		lines.forEach((line) => {
+			this.pieces.forEach((piece) => {
+				piece.blocks.forEach((b, ix, obj) => {
+					if (b.y+piece.position.y == line) {
+						obj.splice(ix, 1);
+						piece.land = false;
+					}
+				});
+			});
+			this.matriz[line] = this.emptyLine;
+		});
+		
+		
 	}
 	
 	updateMatriz() {
@@ -65,14 +83,14 @@ class Tetris {
 		});
 		
 		if (destroyLines.length) {
-			this.destroy(destroyLines)
+			this.destroy(destroyLines);
 		}
 	}
 	
 	control(inputs, time) {
 		//Player's control
-		this.horizontalTime += time;
-		this.rotateTime += time;
+		this.horizontalTime = this.isPlaying? this.horizontalTime+time : 0;
+		this.rotateTime = this.isPlaying? this.rotateTime+time : 0;
 		
 		if (this.horizontalTime >= this.horizontalCooldown) {
 			this.horizontalTime = 0;
@@ -88,21 +106,27 @@ class Tetris {
 			if (inputs.includes(this.controls.down)) {
 				this.gain.y = 1;
 			}
-			
-			//Rotation
-			if (inputs.includes(this.controls.rot)) {
-				this.makeRotation = 1;
-			}
 		} else {
 			this.gain.x = 0;
 			this.gain.y = 0;
+		}
+		
+		if (this.rotateTime >= this.rotateCooldown) {
+			this.rotateTime = 0;
+			//Rotation
+			if (inputs.includes(this.controls.rotR)) {
+				this.makeRotation = 1;
+			} else if (inputs.includes(this.controls.rotL)) {
+				this.makeRotation = -1;
+			}
+		} else {
 			this.makeRotation = 0;
 		}
 
 		for (let piece of this.pieces) {
 			if (!piece.land) {
 				piece.isCollided(this.matriz);
-				piece.update(this.gain.x,this.gain.y);								
+				piece.update(this.gain.x,this.gain.y);	
 				piece.rotate(this.makeRotation, this.matriz);
 			}
 		}
@@ -111,26 +135,36 @@ class Tetris {
 	update(time) {
 		//Default gravity
 		this.timer += time;
-		if (this.timer >= 1000/this.speedNow) {
+		if (this.timer >= 1000/this.speedNow && this.isPlaying) {
+			let hasPiece = false;
 			this.pieces.forEach((piece) => {
 				if (!piece.land) {
+					hasPiece = true;
 					const initialLand = piece.land; //if initial state of piece is land
 					this.settings.ctx.fillStyle = piece.color; // set color
 					piece.isCollided(this.matriz);
-					piece.update(this.gain.x,1, true);
+					piece.update(this.gain.x,1,true);
+					piece.isLanded(this.matriz)
+					//piece.update(0,0,true);
 					if (piece.land != initialLand) {
 						this.updateMatriz();
 						this.generatePiece();
 					}
 				}
 			});
+			if (!hasPiece) {
+				this.isPlaying = false;
+			}
 			this.timer = 0;
+		}
+		
+		if (!this.isPlaying) {
+			console.log('game over')
 		}
 	}
 	
 	drawPieces() {
 		this.pieces.forEach((piece) => {
-			this.settings.ctx.fillStyle = piece.color;
 			piece.draw();
 		})
 	}
@@ -143,7 +177,7 @@ class Tetris {
 			}
 		}
 		
-		this.settings.ctx.fillStyle = 'cyan';
+		this.settings.ctx.fillStyle = 'blue';
 		this.settings.ctx.fillRect(0, ((this.settings.heightTiles-1)*this.settings.sizeTile), this.settings.widthTiles*this.settings.sizeTile, 3);
 		this.settings.ctx.fillStyle = 'lime';
 		this.settings.ctx.fillRect(((this.settings.widthTiles-1)*this.settings.sizeTile), 0, 3, this.settings.heightTiles*this.settings.sizeTile);

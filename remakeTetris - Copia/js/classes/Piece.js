@@ -58,32 +58,50 @@ class Piece {
 		if (Math.abs(r)) {
 			const p = {x: 2, y: 2}
 			let doRotate = true;
+			let xNew, yNew, xIn, yIn;
 			for (const b of this.blocks) {
-				const xIn = b.x + p.x;
-				const yIn = b.y - p.y;
 				
-				let xNew = -yIn - p.x + this.rotation.x;
-				let yNew = xIn - p.y + this.rotation.y;
-				
+				if (r > 0) {
+					xIn = b.x + p.x;
+					yIn = b.y - p.y;
+					
+					xNew = -yIn - p.x + this.rotation.x;
+					yNew = xIn - p.y + this.rotation.y;
+				} else if (r < 0) {
+					xIn = b.x + p.x;
+					yIn = b.y - p.y;
+					
+					xNew = yIn + p.x - this.rotation.y;
+					yNew = -xIn + p.y + this.rotation.x;
+				}
+					
 				if (
+					this.position.y+yNew < 0 ||
 					this.position.x+xNew<0 || 
-					this.position.x+xNew>=this.widthTiles-1 ||
-					this.position.y+yNew<0 ||
-					this.position.y+yNew>=this.heightTiles-1 ||
+					this.position.x+xNew>this.widthTiles-1 ||
+					//this.position.y+yNew<0 ||
+					this.position.y+yNew>this.heightTiles-1 ||
 					(matriz[this.position.y+yNew][this.position.x+xNew] != 0)
 					) {
 					doRotate = false;
 					break;
 				}
 			} 
-			if (doRotate) {
+			if (doRotate && !this.landing) {
 				for (const b of this.blocks) {
-					const xIn = b.x + p.x;
-					const yIn = b.y - p.y;
-					
-					let xNew = -yIn - p.x + this.rotation.x;
-					let yNew = xIn - p.y + this.rotation.y;
-					
+					if (r > 0) {
+						xIn = b.x + p.x;
+						yIn = b.y - p.y;
+						
+						xNew = -yIn - p.x + this.rotation.x;
+						yNew = xIn - p.y + this.rotation.y;
+					} else if (r < 0) {
+						xIn = b.x + p.x;
+						yIn = b.y - p.y;
+						
+						xNew = yIn + p.x - this.rotation.y;
+						yNew = -xIn + p.y + this.rotation.x;
+					}
 					if (this.position.x+xNew < 0) {
 						console.log('out')
 					} else {
@@ -117,6 +135,10 @@ class Piece {
 			this.cantRight = this.cantRight? this.cantRight : !!((x >= this.widthTiles-1) || (y>0 && matriz[y][x+1] && matriz[y][x+1]==1));
 			
 			this.landing = this.landing || ((y >= matriz.length-1) || (y>0 && matriz[y] && matriz[y+1][x]==1));
+			
+			if (matriz[y] && matriz[y][x] && matriz[y][x] != 0) {
+				this.land = true;
+			}
 		}
 	}
 	
@@ -132,27 +154,22 @@ class Piece {
 		}
 	}
 	
+	isLanded(matriz) {
+		for (let b of this.blocks) {
+			const x = this.position.x+b.x;
+			const y = this.position.y+b.y;
+			
+			if (matriz[y+1] && matriz[y+1][x] && matriz[y+1][x] == 0) {
+				this.land = false;
+			}
+		}
+	}
+	
 	draw() {
 		//const colors = ['red', 'blue', 'lime', 'gold']
 		this.blocks.forEach((b, ix) => {	
 			this.ctx.fillStyle = this.color; //colors[ix]
-			
 			this.ctx.fillRect((this.position.x+b.x)*this.sizeTile, (this.position.y+b.y)*this.sizeTile, this.sizeTile, this.sizeTile);
-			
-			/*
-			this.ctx.fillStyle = 'gold';
-			this.ctx.beginPath();
-			this.ctx.arc((this.position.x+b.x)*this.sizeTile, (this.position.y+b.y)*this.sizeTile, 2, 0, Math.PI*2);
-			this.ctx.fill();
-			this.ctx.closePath();
-			
-			if (this.land) {
-				this.ctx.fillStyle = 'rgba(255,255,255, 1)';				
-			} else if (this.landing) {
-				this.ctx.fillStyle = 'rgba(255,255,255, 0.5)';
-			} else {
-			}
-			*/
 		})
 	}
 }

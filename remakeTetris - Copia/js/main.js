@@ -1,12 +1,11 @@
 //Game --------------------
-const tetris = new Tetris(settings, 5, 1, {left:'a', right:'d', down:'s', rot:'x'});
+const tetris = new Tetris(settings, 2, 1, {left:'arrowleft', right:'arrowright', down:'arrowdown', rotL:'z', rotR:'x'});
 const fpsTimer = new Timer();
 const controller = new Controller();
 
 function gameRun() {
 	requestAnimationFrame(gameRun);
 	fpsTimer.update();
-	
 	tetris.control(controller.inputs, fpsTimer.dif);
 	if (fpsTimer.mainPoint > 1000/settings.fps) {
 		fpsTimer.reset();
