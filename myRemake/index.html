@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" type="text/css" href="./style/global.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <title>Tetris - Remake</title>
+</head>
+<body>
+
+	<div id="canvasBox"> 
+		<canvas id="tela"></canvas>
+		<canvas id="matriz"></canvas>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+	<script>
+		WebFont.load({
+			google: {
+				families: ['Nunito:300,400,700']
+			}
+		});
+	</script>
+
+	<script src="./js/classes/Timer.js" defer></script>
+	<script src="./js/classes/Controller.js" defer></script>
+	<script src="./js/settings.js" defer></script>
+	<script src="./js/classes/Grid.js" defer></script>
+	<script src="./js/classes/Block.js" defer></script>
+	<script src="./js/classes/Piece.js" defer></script>
+	<script src="./js/classes/Tetris.js" defer></script>
+	<script src="./js/main.js" defer></script>
+</body>
+</html>

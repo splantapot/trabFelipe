@@ -1,0 +1,30 @@
+* {
+	padding: 0;
+	margin: 0;
+	border: 0;
+	--percent:30%;
+}
+
+div[id="canvasBox"] {
+	background-color: rgba(0,255,0,0.2);
+	width:100vw;
+	height:100vh;
+}
+
+canvas {
+	position: absolute;
+	top:50%;
+	transform: translateY(-50%);
+	border: 5px solid white;
+	border-radius: 8px;
+}
+
+#tela {
+	left:var(--percent);
+	transform: translate(-50%, -50%);
+}
+
+#matriz {
+	right:var(--percent);
+	transform: translate(50%, -50%);
+}
